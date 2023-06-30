@@ -1,8 +1,8 @@
 {
     "name": "chat",
-    "main": "main.js",
+    "main": "main.mjs",
     "scripts": {
-        "start": "node main.js"
+        "start": "node main.mjs"
     },
     "dependencies": {
         "langchain": "0.0.100"
