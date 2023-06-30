@@ -37,6 +37,7 @@ async function load_resource() {
 async function handle_command(user_input) {
   const lowered = user_input.toLowerCase();
   if (!COMMANDS.has(lowered)) {
+    let res = await session.chat(user_input);
     return true;
   }
   if (lowered === "load") {
