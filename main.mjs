@@ -4,7 +4,7 @@ import * as session from './session.mjs'
 // Supported commands
 const COMMANDS = new Map([
   ["load", "Load resources"],
-  ["quit", "Quit the conversation"],
+  ["quit", "Quit the conversation (^D)"],
 ]);
 
 /** Prompt the user and get the answer */
@@ -24,36 +24,38 @@ function question(prompt) {
 
 /** load command */
 async function load_resource() {
-  const url = await question(`> Input the resource URL:\n`);
+  const url = await question('> Input the resource URL:\n');
   try {
-    session.load_resource(url);
+    await session.load_resource(url);
     console.log("> Successfully loaded");
   } catch (error) {
-    console.error("Failed to load:" + error);
+    console.error("??? Failed to load:" + error);
   }
 }
 
 /** Handle user commands. */
-function handle_command(user_input, rl) {
+async function handle_command(user_input) {
   const lowered = user_input.toLowerCase();
   if (!COMMANDS.has(lowered)) {
-    return
+    return true;
   }
-
   if (lowered === "load") {
-    load_resource(rl);
+    await load_resource();
+    return true;
   } else if (lowered == "quit") {
-    console.log("Bye!");
     return false;
   }
 }
 
-async function main(){
-  const hints = Array.from(COMMANDS.entries()).map(
-    ([cmd, desc]) => cmd + ": " + desc
-  ).join(", ");
-  let user_input = await question(`? (${hints})\n`);
-  handle_command(user_input);
+async function main() {
+  let cont = true;
+  while (cont) {
+    const hints = Array.from(COMMANDS.entries()).map(
+      ([cmd, desc]) => cmd + ": " + desc
+    ).join(", ");
+    let user_input = await question(`? (${hints})\n`);
+    cont = await handle_command(user_input);
+  }
 }
 
 main();
