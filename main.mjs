@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import readline from 'readline'
 import * as session from './session.mjs'
 
@@ -22,7 +23,7 @@ function question(prompt) {
   });
 }
 
-/** load command */
+/** Callback for the load command. */
 async function load_resource() {
   const url = await question('> Input the resource URL:\n');
   try {
@@ -33,11 +34,17 @@ async function load_resource() {
   }
 }
 
+/** Callback for the chat command. */
+async function chat(user_input) {
+  let res = await session.chat(user_input);
+  console.log(chalk.cyan(`${res}`));
+}
+
 /** Handle user commands. */
 async function handle_command(user_input) {
   const lowered = user_input.toLowerCase();
   if (!COMMANDS.has(lowered)) {
-    let res = await session.chat(user_input);
+    await chat(user_input);
     return true;
   }
   if (lowered === "load") {
@@ -49,12 +56,13 @@ async function handle_command(user_input) {
 }
 
 async function main() {
+  console.log(chalk.cyan("Welcome to a CLI to ChatGPT. Start by asking a question"))
   let cont = true;
   while (cont) {
     const hints = Array.from(COMMANDS.entries()).map(
       ([cmd, desc]) => cmd + ": " + desc
     ).join(", ");
-    let user_input = await question(`? (${hints})\n`);
+    let user_input = await question(chalk.gray(`(${hints})\n`));
     cont = await handle_command(user_input);
   }
 }

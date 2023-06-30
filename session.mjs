@@ -1,13 +1,25 @@
+import chalk from 'chalk'
 import 'dotenv/config'  // Use .env config
-import { LLMChain } from "langchain/chains";
 import { OpenAI } from "langchain/llms/openai";
+import { BufferMemory } from "langchain/memory";
+import { ConversationChain } from "langchain/chains";
 import { PromptTemplate } from "langchain/prompts";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 
-/** Session is a module-level object containing states of the session. */
-var session = {
+/** Create a session with built-in memory. */
+function new_session() {
+  let model = new OpenAI({ temprature: 0.1 })
+  let memory = new BufferMemory();
+  let chain = new ConversationChain({ llm: model, memory: memory })
+  return {
     resources: [],
-};
+    model,
+    memory,
+    chain,
+  };
+}
+
+var session = new_session();
 
 /** Load resource into langchain */
 export async function load_resource(url) {
@@ -23,17 +35,16 @@ export function search(search_query) {
   return ["search result"];
 }
 
-
 /** Send the chat to chatGPT and get the answer */
 export async function chat(user_input) {
+  // TODO: save context.
   const template = "{question}"
-  const model = new OpenAI({temprature: 0.9});
   const prompt = new PromptTemplate({
     template: template,
     inputVariables: ["question"],
   });
-  const chain = new LLMChain({ llm: model, prompt: prompt });
-  const res = await chain.call({ question: user_input});
-  console.log(res);
-  return res;
+  console.log(chalk.gray("Thinking..."));
+  const input = await prompt.format({ question: user_input });
+  const res = await session.chain.call({ input });
+  return res.response;
 }
