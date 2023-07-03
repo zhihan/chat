@@ -7,7 +7,8 @@ const COMMANDS = new Map([
   ["load", "Load doc"],
   ["quit", "Quit (^D)"],
   ["status", ""],
-  ["answer", "Answer questions based on given facts"]
+  ["answer", "Answer questions based on given facts"],
+  ["summary", ""],
 ]);
 
 /** Prompt the user and get the answer */
@@ -53,9 +54,23 @@ async function answer() {
       console.error("??? Failed to search:" + error);
     }
   }
+  if (docs.length > 5) {
+    console.log(chalk.gray("Using the first five documents."));
+    docs = docs.slice(0, 5);
+  }
   const user_input = await question(`> What questions do you have?\n`);
   try {
     const res = await session.chat_with_docs(user_input, docs);
+    console.log(chalk.cyan(`${res}`));
+  } catch (error) {
+    console.error("??? Failed:" + error);
+  }
+}
+
+/** Write a summary. */
+async function summary() {
+  try {
+    const res = await session.summary();
     console.log(chalk.cyan(`${res}`));
   } catch (error) {
     console.error("??? Failed:" + error);
@@ -82,6 +97,8 @@ async function handle_command(user_input) {
     console.log(chalk.green(status));
   } else if (lowered == "answer") {
     await answer();
+  } else if (lowered == "summary") {
+    await summary();
   }
   return true;
 

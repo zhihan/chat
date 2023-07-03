@@ -63,7 +63,7 @@ export async function chat_with_docs(question, docs) {
     inputVariables: ["content", "question"],
   });
   const content = docs.map(doc => doc.pageContent).join("\n\n");
-  console.log(chalk.gray("Thinking..."));
+  console.log(chalk.gray(`Thinking... (${docs.length} references)`));
   const input = await prompt.format({ content, question });
   const res = await session.chain.call({ input });
   return res.response;
@@ -90,4 +90,18 @@ export function status() {
   }
   const docs = session.documents.map(doc => doc.metadata.source).join(", ");
   return `${session.documents.length} documents: ${docs}`;
+}
+
+/** Write a summary of the conversation today */
+export async function summary() {
+  // TODO: save context.
+  const input = `
+  You are a personal assistant. Please write a summary of our conversation
+  so far. Write in the following format:
+  We discussed {certain topics}. You asked about {these things}. Here is a
+  summary of {my answer}.
+  `
+  console.log(chalk.gray(`Summarizing...`));
+  const res = await session.chain.call({ input });
+  return res.response;
 }
