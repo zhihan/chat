@@ -13,17 +13,10 @@ choosing a low temperature, and using langchain to provide the prompt, the
 program can query ChatGPT to get the correct answer.
 
 ```
-Welcome to a CLI to ChatGPT.
-You can use me to interact with ChatGPT. In addition, you can load a reference document,
-and I will answer your questions based on that reference.
-
-Start by asking a question, or load a reference document.
-(load: Load doc, quit: Quit (^D), status: , answer: Answer questions based on given facts, summary: )
 load
 > Input the document:
 guide.txt
 Successfully loaded
-(load: Load doc, quit: Quit (^D), status: , answer: Answer questions based on given facts, summary: )
 answer
 > Input the search query:
 compiler
@@ -31,15 +24,16 @@ compiler
 What is the recommended compiler?
 Thinking... (4 references)
  The recommended compiler is Closure Compiler.
-(load: Load doc, quit: Quit (^D), status: , answer: Answer questions based on given facts, summary: )
+
 answer
 > Input the search query:
 compiler
 > What questions do you have?
 What does the compiler do?
 Thinking... (4 references)
- The Closure Compiler performs type checking and other checks, optimizations and other transformations (such as ECMAScript 6 to ECMAScript 5 code lowering).
-(load: Load doc, quit: Quit (^D), status: , answer: Answer questions based on given facts, summary: )
+ The Closure Compiler performs type checking and other checks, optimizations and other transformations
+ (such as ECMAScript 6 to ECMAScript 5 code lowering).
+
 answer
 > Input the search query:
 testing
@@ -47,8 +41,12 @@ testing
 What testing framework should I use?
 Thinking... (4 references)
  I don't know.
-(load: Load doc, quit: Quit (^D), status: , answer: Answer questions based on given facts, summary: )
+
 summary
 Summarizing...
- We discussed the Google JavaScript Style Guide. You asked about the recommended compiler, what it does, and the testing framework to use. Here is a summary of my answer: The recommended compiler is Closure Compiler and it performs type checking and other checks, optimizations and other transformations (such as ECMAScript 6 to ECMAScript 5 code lowering). I don't know which testing framework to use.
+ We discussed the Google JavaScript Style Guide. You asked about the recommended compiler,
+ what it does, and the testing framework to use. Here is a summary of my answer: The recommended
+ compiler is Closure Compiler and it performs type checking and other checks, optimizations
+ 'and other transformations (such as ECMAScript 6 to ECMAScript 5 code lowering).
+ I don't know which testing framework to use.
 ```
